@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <title>backbone-view</title>
+</head>
+<body>
+
+<script>
+(function(){
+	//this 指代当前对象
+	var checkObj = function (){
+    	return {
+    		checkName : function (){
+    			console.log("checkName");
+    			return this;//这里返回this就可以链式调用咯
+    		},
+    		checkEmail: function (){
+    			console.log("checkEmail");
+    		}
+    	}
+	};
+	var cc = checkObj();
+	cc.checkName().checkEmail();
+    
+
+})();
+</script>
+</body>
+</html>
