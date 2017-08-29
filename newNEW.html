@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <title>backbone-view</title>
+</head>
+<body>
+
+<script>
+(function(){
+    //2.3 面向对象编程的坑 -- 忘记写new 
+    var Book = function (id, name, price) {
+        this.id= id;
+        this.name = name;
+        this.price = price;
+    };
+
+    var book = Book("12","jsBook", "20");
+
+    console.log(book);   //undefined
+    
+    console.log(window.id);  //12
+    console.log(window.name); //jsBook
+    console.log(window.price);  //20
+    /* 使用面向对象的编程方式在实例化时一定不要忘记写关键词new，否则Book作为函数被执行，其中的this就指向了window ，问题大啦 ，so 有木有方式防止这种情况捏？ 看下面*/
+
+    var Book = function (id, name, price){
+        if(this instanceof Book){
+            this.id= id;
+            this.name = name;
+            this.price = price;
+        }else{
+            return new Book(id, name, price);
+        }
+    }
+
+    //这里写不写new 就都可以了！
+    var book = Book("12","jsBook", "20");
+
+})();
+</script>
+</body>
+</html>
