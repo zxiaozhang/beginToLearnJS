@@ -19,9 +19,22 @@
 	};
 
 	var cc =new checkObj();
-	debugger
 	console.log(cc);
-    
+
+	//prototype是私有属性哦
+	var Book = function(id,name){
+ 		this.id= id;
+ 		this.name = name;
+	};
+	Book.prototype.Num = "1234";
+	var book = new Book('12',"adb");
+
+	console.log(book.Num);
+	Book.prototype.Num = "4321";
+	var book2 = new Book("1233","eff");
+
+	 console.log(book.Num);
+	console.log(book2.Num);
 
 })();
 </script>
