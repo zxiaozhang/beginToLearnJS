@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <title>BeginToLearnJS-extend</title>
+</head>
+<body>
+
+<script>
+(function(){
+    //面向对象的编程，继承是必不可缺的关系，今天看下继承的几种方式
+    //one--- 类式继承
+    //声明父类
+    function SuperClass(isOK){
+        var sss = "super";
+        this.superValue = isOK;
+    }
+    SuperClass.prototype.getSuperValue = function (){
+        return this.superValue;
+    };
+    //声明子类
+    function SubClass(){
+        this.subValue = false;
+    }
+    SubClass.prototype = new SuperClass(['js','css']);
+    SubClass.prototype.getSubValue = function (){
+        return this.subValue;
+    };
+
+    var test = new SubClass();
+    console.log(test.getSubValue());   //false
+    console.log(test.getSuperValue());  //true
+
+    var t2 = new SubClass();
+    t2.superValue.push("html");
+    console.log(t2.getSuperValue());
+    console.log(test.getSuperValue());
+
+    //类式继承，父类的实例化作为子类的原型。子类的实例化可以调用到子类的原型方法以及父类的原型方法。但是这里有一个坑就是： 当父类的公有属性为引用类型（对象，数组，函数）时，实例化之间会相互影响对方。正如例子中，t2去改变父类中的superValue值，也会影响到test 。 
+
+})();
+</script>
+</body>
+</html>
