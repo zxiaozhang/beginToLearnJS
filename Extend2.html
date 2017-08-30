@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <title>BeginToLearnJS-extend</title>
+</head>
+<body>
+
+<script>
+(function(){
+    //面向对象的编程，继承是必不可缺的关系，今天看下继承的几种方式
+    //two--- 构造函数继承 && 组合式继承
+    function Books(name){
+        this.price = [20,30,40,50];
+        this.name = name;
+    }
+    Books.prototype.getName= function (){
+        return this.name;
+    };
+
+    //子类
+    function ChineseBook(name){
+        Books.call(this, name);
+    }
+
+    //test
+    var abc = new ChineseBook("jinpingmei");
+    console.log(abc.price);  //[20,30,40,50]
+    //console.log(abc.getName());   //该语句会报错，因为原型上的东西并没有继承过来。
+    var abc2 = new ChineseBook("hongloumeng");
+    console.log(abc2.price);  //[20,30,40,50]
+    abc.price.push(10);
+    console.log(abc.price);  //[20,30,40,50,10]
+    console.log(abc2.price);  //[20,30,40,50]
+
+
+    //在子类的构造函数中调用了父类的call函数，从而替换了this，实现了类的继承。但是这个不会吧父类的原型也一并继承回来，而且每一个子类的实例化都是单独的一个对象。为了实现代码的复用性，我们在看组合继承。 组合： 原型继承+ 构造函数继承
+
+    function Book(name,time){
+        this.name = name;
+        this.time = time;
+        this.book = ['js','css'];
+    }
+    Book.prototype.getName = function (){
+        return this.name;
+    };
+
+    function EnBook(name,time,price){
+        //构造函数继承
+        Book.call(this,name,time);
+        this.price = price;
+    }
+    //原型继承
+    EnBook.prototype = new Book();
+    EnBook.prototype.getTime = function (){
+        return this.time;
+    };
+
+    var test1 = new EnBook("ha",'2017-08-30',20);
+    var test2 = new EnBook("hei", '2017-07-29',23);
+
+    test1.book.push("html");
+    console.log(test1.book);  //["js", "css", "html"]
+    console.log(test2.book);  //["js", "css"]
+    console.log(test1.getName());  //'he'
+    console.log(test2.getName());  //'hei'
+
+    //这种组合继承方式就避免的各实例化对象之间相互影响的问题，又提高了复用性。
+
+})();
+</script>
+</body>
+</html>
