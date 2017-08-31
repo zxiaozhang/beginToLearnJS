@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <title>BeginToLearnJS-extend</title>
+</head>
+<body>
+
+<script>
+(function(){
+    //面向对象的编程---多态。多态也是面向对象编程的一个特点， 多态： 一个方法可以以多种形式被调用；在js中还是很容易被模仿的。
+    function Add (){
+    	function zero (){
+    		return 10;
+    	}
+    	function one (arg){
+    		return 10 + arg;
+    	}
+    	function two (a,b){
+    		return a+b;
+    	}
+    	this.add = function (){
+    		var len = arguments.length;
+    		switch (len){
+    			//一个参数时调用zero方法
+    			case 0 :{
+    				return zero();
+    				break;
+    			}
+    			case 1 :{
+    				return one(arguments[0]);  //一个参数时也是数组哦！
+    				break;
+    			}
+    			case 2:{
+    				return two(arguments[0],arguments[1]);
+    				break;
+    			}
+    			default:
+    			    return "not valid arg";
+    			    break;	
+    		}
+    	}
+
+    }
+    //这样整个的类封装了三个私有方法，通过参数or判断条件去分别完成相应的调用。对外来看就是多态！
+    var test = new Add();
+    console.log(test.add());   //10
+    console.log(test.add(2));  //12
+    console.log(test.add(3,4));  //7
+
+})();
+</script>
+</body>
+</html>
