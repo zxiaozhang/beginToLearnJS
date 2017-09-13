@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>regexp</title>
+</head>
+<body>
+<script type="text/javascript">
+	//首先是创建的两种方式
+	//one: 直接定义表达式，将正则表达式写在两个斜杠之间即可。使用此方法可以有更好的性能。
+	const a = /ab+c/;   //const变量，局部变量，不能改变
+
+	//two： 调用RegExp 对象的构造函数
+	let b = new RegExp("ab+c");
+
+	//如何匹配反斜杠？
+	let test1 = /\\/;
+	let test2 = new RegExp("\\\\");
+
+	//let test3 = new RegExp("\\");  会报错如下Uncaught SyntaxError: Invalid regular expression: /\/: \ at end of pattern  湊不够两次转义
+
+	let str="git\\RegExp";
+
+	console.log(test1.test("asd\\dds"));   //true
+	console.log(test1.test("asd\dds"));   //字符串中的单反斜杠是转义字符，所以它和后面的d组合成了一个字符。  不会被匹配到，输出false
+	console.log(test2.test(str));  //true
+
+
+</script>
+</body>
+</html>
