@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>正则表达式之先行断言</title>
+</head>
+<body>
+<script type="text/javascript">
+	//先行断言
+		//正向先行断言--检测某位置后面必须紧跟条件中的字符 (?=pattern)  pattern即为条件
+		const str = "hai xiaozhang, do you remeber the picture?";
+		const reg1 = /re(?=meber)/g;
+		console.log("正向先行断言："+str.match(reg1));  //["re"] 只会匹配到remeber中的re 而不会匹配后面那个
+
+		//负向先行断言，匹配位置的字符后面必须不是条件中的字符 (?!pattern) 
+		const reg2 = /re(?!meber)/;
+		console.log("负向先行断言："+str.match(reg2)); // 只会匹配picture中的re
+	
+	/*js 语言中正则表达式仅支持先行断言哦，所以后行不再以栗子讲解，只是说下大概，其实就是反过来，比如判断re前面必须是pictu 那么就可以写成(?<=pictu)re  这个在js代码中无效。为什么叫后行，可以理解为正常的代码都是从左到右匹配的，这个匹配到re后都会回来判断是否满足括号内的条件，按照左到右的方向看是向后走了一下。 负向后行判断也不说了，可以推出来*/
+
+
+</script>
+</body>
+</html>
