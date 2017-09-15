@@ -5,6 +5,7 @@
 </head>
 <body>
 <script type="text/javascript">
+	"use strict"
 	//首先是创建的两种方式
 	//one: 直接定义表达式，将正则表达式写在两个斜杠之间即可。使用此方法可以有更好的性能。
 	const a = /ab+c/;   //const变量，局部变量，不能改变
@@ -24,6 +25,28 @@
 	console.log(test1.test("asd\dds"));   //字符串中的单反斜杠是转义字符，所以它和后面的d组合成了一个字符。  不会被匹配到，输出false
 	console.log(test2.test(str));  //true
 
+	// 特殊字符“？”　匹配前面的字符０次或者１次，也可以认为是前面那一项是可选的/可有可无的
+	let test3 = /e?le?/;
+	let str1 = "angel";
+	let str2 = "anges";
+	let str3 = "langelaa";
+	console.log(str1.match(test3));   //会匹配到el 
+	console.log(str2.match(test3));   // null 匹配不到任何东东是因为l是必须项，两个e都是可有可无的
+	console.log(str3.match(test3));   //匹配到“l” ，为啥匹配不到后面的el捏？因为默认并不是全局匹配模式，如果改为 /e?le?/g 加上一个g 参数就会匹配到两个结果l和el
+	//可以看出来啊， 实际上匹配出来的是ele或者el 或者 le 或者l，e是可有可无的选项（有点难以理解吗，少年?）
+
+	// ？号的非贪婪模式
+	let test4 = /e??se??/;
+	let test5 = /bo*?/;
+	let test6 = /".*?"/;
+	let str4 = "taeset";
+	let str5 = "abooooosd";
+	let str6 = "\"obstruct\"";
+	console.log("非贪婪模式的匹配测试一"+str4.match(test4)); //为什么会匹配到es？而不是一个s？这个问题真的是有意思呢，涉及到正则表达式的匹配原理，以及贪婪模式非贪婪模式的两个过程，说起来比较罗嗦。可以跳转至博客（http://blog.csdn.net/sinat_15258199）来了解。
+	console.log("非贪婪模式的匹配测试二"+str5.match(test5)); //仅会匹配到一个b哈哈哈哈。忽略优先
+	console.log("非贪婪模式的匹配测试三"+str6.match(test6)); //这个会返回"",因为会尽可能少的匹配，那就是空
+
+	
 
 </script>
 </body>
