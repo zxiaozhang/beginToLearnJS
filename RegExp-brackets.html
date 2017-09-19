@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>正则基础练习</title>
+</head>
+<body>
+<script type="text/javascript">
+	//点号匹配除换行符以外的任何字符
+
+	const reg1 = /.h/;
+	const str1 = "hai,xiaozhang, can you show me a magic?";
+	console.log(str1.match(reg1));   //会匹配到zh， 不会匹配到第一个hai 中的h
+
+	//括号的分支选择作用
+	const reg2 = /love (you|me)/g;
+	const str2 = 'you love me or I love you ?';
+	console.log(str2.match(reg2));
+
+	//括号的分组引用功能（匹配日期为例）
+	var reg3 = /\d{4}-\d{2}-\d{2}/;
+	var str3 = "time is 2017-09-18";
+	console.log(str3.match(reg3));   //["2017-09-18"]
+
+	const reg4 = /(\d{4})-(\d{2})-(\d{2})/;
+	console.log(str3.match(reg4));   //["2017-09-18","2017","09","18"]  可以看出除了原来匹配到的日期外，还分别匹配到了年月日。并且可以通过全局对象RegExp取用相应的值
+
+	console.log("日期中年为："+RegExp.$1);   //日期中年为：2017
+	console.log("日期中月为："+RegExp.$2);   //日期中月为：09
+	console.log("日期中日为："+RegExp.$3);   //日期中日为：18
+	console.log("just by try" +RegExp.$0);   //注意$0 会得到undefined
+	console.log("just by try" +RegExp.$4);   //注意$0 会得到null
+
+	const reg5 = /(\d{4})-(\d{2})-(\d{2})/g;
+	console.log(str3.match(reg5));    //加了全局搜索以后match方法只会输出一个["2017-09-18"]
+	console.log("日期中年为："+RegExp.$1);   //日期中年为：2017   但是依然可以捕获分组数据
+
+	//实力应用
+	//将时间格式由yyyy-mm-dd 改为dd/mm/yyyy 
+	console.log(str3.replace(reg4,function() {
+		return RegExp.$3+"/"+RegExp.$2+"/"+RegExp.$1;
+	}));    //返回time is 18/09/2017
+	//写法二
+	console.log(str3.replace(reg4,"$3/$2/$1"));     //time is 18/09/2017
+	//replace方法后边也会学到，莫急,但是注意replace不会改变原变量的值
+
+	console.log("-------------------------------------------------------");
+
+	//括号的反向引用。（还是时间问题）
+
+	//如果同时向匹配yyyy-mm-dd、yyyy/mm/dd、 yyyy.mm.dd 这三种样式的时间格式怎么办？
+	//可以想到括号的一个分支的作用so
+	const reg6 = /(\d{4})(-|\.|\/)(\d{2})(-|\.|\/)(\d{2})/;
+	console.log(reg6.test("2017/09/19"));  //true 
+	console.log(reg6.test("2017-09-19"));  //true
+	console.log(reg6.test("2017.09.19"));  //ture
+	console.log(reg6.test("2017-09/18"));; //true   啊喂，这个也是true 啊！
+
+	console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+	//怎么防止出现最后一种情况的误判呢？ 就是反向引用
+	const reg7 = /(\d{4})(-|\.|\/)(\d{2})\2(\d{2})/;  //仔细对比和reg6的区别
+	console.log(reg7.test("2017/09/19"));  //true 
+	console.log(reg7.test("2017-09-19"));  //true
+	console.log(reg7.test("2017.09.19"));  //ture
+	console.log(reg7.test("2017-09.18"));; //false
+	//其中的\2 就是反向引用了(-|\.|\/)，而且这个分组匹配到短横，引用就会只引用短横，这就是括号的反向引用。
+
+	console.log("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+	const reg8 = /((\d)(\d(\d)))\1\2\3/;
+	const str5 = "123123123";
+	console.log(str5.match(reg8)); //["123123123", "123", "1", "23", "3"]
+	//该例子中，至少需要三个重复的123才能完成匹配，
+
+	console.log(".................\\10会是什么结果呢...........................");
+	const reg9 = /(a)(b)(c)(d)(e)(f)(g)(h)(i)(j)(k)\10/;
+	console.log(reg9.test("abcdefghijkj"));   //true
+	console.log(reg9.test("abcdefghijka0k"));  //false
+
+	console.log("++++++++++++++++++引用不存在的分组++++++++++++++++++++++");
+	const reg10 = /(a)bc\2/;
+	console.log(reg10.test("abca"));  //false
+	console.log(reg10.test("abc\2"));  //true
+	console.log(reg10.test("abc\\2"));  //false
+	console.log(reg10.test("abc"));   //false
+	//这里一定注意一个问题，"abc\2" 这种格式的写法只能在非严格模式下运行！ 严格模式下会报错：Octal literals are not allowed in strict mode 严格模式下不允许八进制的表示方法。
+
+
+	console.log("******************非捕获分组*****************************");
+	const reg11 = /(?:ab){1,2}/;
+	console.log("asdfabas".match(reg11));   //["ab"]
+	console.log(RegExp.$1);    //什么也不会有
+
+
+	console.log("^^^^^^^^^^^^^^^^^^^最后的实战^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+	const regex = /(?:^|\s)\w/g;
+	const text = "hai, xiaozhang, can you show me the magic what is your new learned";
+	var res = text.replace(regex,function(r) {
+		return r.toUpperCase();
+	});
+	console.log(res);  //Hai, Xiaozhang, Can You Show Me The Magic What Is Your New Learned
+
+</script>
+</body>
+</html>
