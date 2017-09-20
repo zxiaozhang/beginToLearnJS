@@ -29,6 +29,12 @@
 	const str3 = 'abcdefg';
 	console.log(str3.match(reg3));  //defg
 	//匹配不包含在中括号内的任何字符，其他特性跟中括号一致。
+
+	//[\b]匹配退格键
+	const reg4 = /ab[\b]/;
+	const str4 = "ab\b\tb";
+	console.log(str4);  //这里的退格符\b在js中并没有发挥作用啊
+	console.log(reg4.test(str4));   //true
 </script>
 </body>
 </html>
