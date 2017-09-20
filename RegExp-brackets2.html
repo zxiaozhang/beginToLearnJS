@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>正则基础练习之中括号</title>
+</head>
+<body>
+<script type="text/javascript">
+	/*首先中括号是匹配中括号内的任意字符，只要包含就会被匹配到,默认是非贪婪的。匹配到一个就结束。
+    * 也就是说一个中括号只会匹配一个字符出来！
+    */
+	const reg = /[xzy]/;
+	const str = "asd zsd xzc xzy ayy";
+	console.log(str.match(reg));   // ['z'];
+
+	//点号，加号，星号，问号在中括号中是没有任何意义的
+	const reg1 = /[asd*hh?]/g;
+	const str1 = "asdddd * weya*";
+	console.log(str1.match(reg1)); //["a", "s", "d", "d", "d", "d", "*", "a", "*"]
+	//上边这个结果也证明了一个中括号只会匹配一个字符出来！
+
+	//量词作用于中括号
+	const reg2 = /[asd*?sf]{2,4}/;
+	const str2 = "can you speak asd?";
+	console.log(str2.match(reg2));  //["asd?"]
+
+	//反向字符集
+	const reg3 = /[^abc]+/;
+	const str3 = 'abcdefg';
+	console.log(str3.match(reg3));  //defg
+	//匹配不包含在中括号内的任何字符，其他特性跟中括号一致。
+</script>
+</body>
+</html>
