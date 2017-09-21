@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>正则基础练习之方法练习</title>
+</head>
+<body>
+<script type="text/javascript">
+	/*两个Regexp发方法分别是 exec() 和 test() ,也就是正则表达式的方法，RegExp.exec()*/
+	
+	//exec匹配并以数组形式返回匹配结果
+	const reg1 = /sleep\s.+?do/;
+	const str = "When you want to go to sleep ,don`t paly your phone.";
+	console.log(reg1.exec(str));
+	//["sleep ,do"]
+
+	const reg2 = /sleep(\s.+?)do/;
+	console.log(reg2.exec(str));
+	//["sleep ,do", " ,"]   这个其实跟str.match() 是一样的效果匹配后会以数组的形式返回
+	console.log(reg2.exec("sss"));  //null
+
+	//test方法，匹配并返回一个布尔值以此反应是否存在匹配结果，ture即为存在要匹配的值
+	const reg3 = /\w.([0-9])+?\b/;
+	console.log(reg3.test("I have 30 apples")); //true 
+	console.log(reg3.test("asdf shjf ")); //false
+
+	console.log("----------------下面都是字符串的方法了--------------------------");
+	//match 方法， 将正则表达式作为参数传入。匹配结果会以数组的形式返回。
+	const reg4 = /&id=(\d+)(?=&name)/;
+	const str2 = "&id=23&name=adsf";
+	console.log(str2.match(reg4)); //["&id=23", "23"]  
+	console.log(RegExp.$1);   //23 用以从url中抓取id
+
+	console.log("^^^^^^^^^^^^^^search方法测试^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+	//search()  将正则作为参数传入，返回匹配结果在字符串中的下标,没有匹配返回-1
+	const reg5 = /a/;
+	const str5 = "have";
+	console.log(str5.search(reg5));   //1
+	console.log("heihei".search(reg5)); //-1
+ 	//so 如果开启了全局匹配，返回什么捏？
+ 	const reg6 = /a/g;
+ 	console.log("I have a apple".search(reg6));  //3  
+ 	//是的，该方法只返回一个下标，全局匹配并没有作用
+
+ 	console.log("++++++++++++++++++replace方法测试+++++++++++++++++++++++++++++++");
+ 	const reg7 = /(^|\s)\w{1}/g;
+ 	const str7 = "you were ,are and will be in my heart!";
+ 	var r = str7.replace(reg7,function(c) {
+ 		return c.toUpperCase();
+ 	});
+ 	console.log(r); //You Were ,are And Will Be In My Heart!
+ 	console.log(str7);//you were ,are and will be in my heart!  
+ 	//replace(reg|substr, fun|newSubstr)该方法不会改变原字符串，而是返回新的字符串。
+ 	/*这个方法比较复杂了，功能也是强大，首先参数上说很灵活可以有四种组合，第一个参数是用以匹配的，正则的话就会使用正则匹配，字符串的话就是匹配一遍，匹配到的结果将会被后面的结果替换，如果后边是个字符串那就直接替换了，如果是函数，则用函数的返回值替换第一个参数匹配到的值。*/
+
+ 	//下边这个栗子展示了，当第一个参数为正则第二个参数为字符串时，字符串中可以用$n的方式插入匹配到的子串。
+ 	const reg8 = /(\d{4})-(\d{2})-(\d{2})/;
+ 	const str8 = "2017-09-21";
+ 	const result = str8.replace(reg8,"$2/$3/$1");
+ 	console.log(result);
+
+ 	//那么如果第二个参数是一个函数可以获取到匹配的子串吗？ 当然是ok的
+
+ 	const result2 = str8.replace(reg8,function(match,p1,p2,offset,string){
+ 		return [p1, p2].join(' - ');
+
+ 	});
+ 	console.log(result2);  //2017-09
+ 	/*解释：
+	 	match其实是前面正则匹配到的结果也就是 2017-09-21这个值；
+		p1,p2,,,  这些就是匹配到的子串，相当于字符串里面的$1，$2...
+		offset 是匹配结果在字符串的下标， 这个例子中全匹配那就是0了
+		string 是原字符串也就是2017-09-21   
+	*/
+
+	console.log("*******************split方法测试区********************");
+	var names = 'xiaozhang ;tian laoshi; jiaoshou';
+
+
+	var re = /\s*;\s*/;
+	var nameList = names.split(re);
+
+	console.log(nameList); //["xiaozhang", "tian laoshi", "jiaoshou"] 
+	//可以看出这个函数是全局匹配的即使表达式中没有写明全局匹配
+
+	var myString = 'Hello World. How are you doing?';
+	var splits = myString.split(' ', 3);
+
+	console.log(splits); //["Hello", "World.", "How"]
+	//split 函数可以传入第二个参数，用以限制最后结果数组的长度。
+</script>
+</body>
+</html>
