@@ -6,7 +6,16 @@
 </head>
 <body>
 <script type="text/javascript">
-	
+	const reg1 = /abc\b/;
+	console.log("habc haha".match(reg1)); //["abc"]
+	console.log(reg1.test("habch"));   //false
+	console.log(reg1.test("habc"));   //true
+
+
+	const reg2 = /ab\nc/;
+	console.log("hha\nsd");
+	console.log(reg2.test("hhab\ncd"));   //true
+	console.log("hhab\ncsd".match(reg2));  //ab\nc
 </script>
 </body>
 </html>
