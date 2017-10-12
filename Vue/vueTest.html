@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>vue</title>
+	<script src="https://unpkg.com/vue"></script>
+</head>
+<body>
+<div id="map">{{message}}</div>
+<div class="app2"><span v-bind:title="message">鼠标悬浮事件</span></div>
+<div id="app3"><span v-if="scene">现在你能看见我</span></div>
+<div id="app-list">
+	<ul>
+		<li v-for="todo in todos">
+			{{ todo.text }}
+		</li>
+	</ul>
+</div>
+<div id="app5" style="border: 1px solid #ccc;">
+	<p>{{ message}}</p>
+	<button v-on:click="reverseMessage">反转字符</button>
+</div>
+
+<div id="app6" style="border: 1px solid #333;">
+	<p>{{ message}}</p>
+	<input type="text" name="one" v-model="message">
+</div>
+<div id="app7" style="border: 1px solid red;">
+	<ol>
+		<todo-item v-for="item in colorList" v-bind:todo="item" v-bind:key="item.id">
+		</todo-item>
+	</ol>
+</div>
+<div id="app8" v-html="rawhtml"></div>
+<script type="text/javascript">
+	//hello world
+	var map = new Vue({
+		el: '#map',
+		data: {
+			message: "hello world"
+		}
+	});
+	//event bind
+	var app2 = new Vue({
+		el: '.app2',
+		data: {
+			message: "页面加载于"+ new Date().toLocaleString()
+		}
+	});//鼠标悬浮在span元素上的时候将会显示message信息。
+
+	//if语句
+	var app3 = new Vue({
+		el:"#app3",
+		data:{
+			scene: true
+		}
+	});//可以修改app3.scene=false  来控制该<span>元素的存在与否，记住是这个dom元素直接干掉了，而不是隐藏了。
+
+	//循环
+	var applist = new Vue({
+		el: "#app-list",
+		data:{
+			todos:[
+				{text: "镇长"},
+				{text: "校长"}
+			]
+		}
+	});//循环创建dom元素，数据绑定dom结构。
+
+	//v-on 绑定事件
+	var app5= new Vue({
+		el: "#app5",
+		data:{
+			message: "1234567"
+		},
+		methods: {
+			reverseMessage : function (){
+				this.message = this.message.split('').reverse().join('');
+			}
+		}
+	});//绑定事件，每一个div即为一个vue对象，对象的方法可以通过this获取改变message
+
+	//v-model 的双向绑定
+	var app6 = new Vue({
+		el: "#app6",
+		data: {
+			message: "修改输入框中的文字试试看"
+		}
+	});//绑定输入框中的文字
+
+	//vue组件的使用
+	/*
+	<div id="app7" style="border: 1px solid red;">
+		<ol>
+			<todo-item v-for="item in colorList" v-bind:todo="item" v-bind:key="item.id">
+			</todo-item>
+		</ol>
+	</div>
+	*/
+	Vue.component('todo-item',{
+		props: ["todo"],
+		template: "<li>{{ todo.text}}</li>"
+	});
+
+	var app7 = new Vue({
+		el: "#app7",
+		data:{
+			colorList:[
+			{id: 0, text: "red"},
+			{id: 1, text: "green"},
+			{id: 2, text: "yellow"}
+			]
+		}
+	});
+
+	//原始html插入
+	var vm = new Vue({
+		el : "#app8",
+		data: {
+			rawhtml :"<button>一个按钮</button>"
+		}
+	});//这个插入是指将div内的内容替换为 data对象中的相应html元素
+</script>
+</body>
+</html>
