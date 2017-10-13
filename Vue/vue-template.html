@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>vue之模板语法</title>
+	<script type="text/javascript" src="https://unpkg.com/vue"></script>
+</head>
+<body>
+<div id="app1">插值{{ text }}</div>
+<div id="app2" v-bind:style="styleObj">插值属性</div>
+<div id="app3">当前共有{{msg+1}}人在线</div>
+<div id="app4">{{isShow? '是的' : 'bushide'}}</div>
+<div id="app5" style="border: 1px solid red">
+	<ol>
+		<li v-for="item in items" v-bind:id="'list'+item.id">{{item.text}}</li>
+	</ol>
+</div>
+<script type="text/javascript">
+	var app1 = new Vue({
+		el: "#app1",
+		data: {
+			text: "文本信息"
+		}
+	});
+
+	//插值属性
+	var app2 = new Vue({
+		el: "#app2",
+		data: {
+			styleObj : {
+				//border-color: "#ccc"  //这种带中间带横杠的不会被识别，会报错
+				color : "#ccc"
+			}
+		}
+	});
+
+	//插值简单的js 表达式！ 注意是表达式。表达式，表达式！！！
+	var app3 = new Vue({
+		el: "#app3",
+		data: {
+			msg : 22
+		}
+	});
+	var app4 = new Vue({
+		el: "#app4",
+		data: {
+			isShow : true
+		}
+	});
+	var app5 = new Vue({
+		el: "#app5",
+		data: {
+			items:[
+				{id: 1,text: "haha"},
+				{id: 2,text: "heihei"}
+			]
+		}
+	})
+</script>
+</body>
+</html>
