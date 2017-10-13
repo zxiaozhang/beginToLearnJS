@@ -21,7 +21,8 @@
 			this.a = 666;
 		},
 		beforeUpdate :　function(){
-			console.log("beforeUpdated时属性值为"+this.a);   //值为2，这个函数会在$watch函数之后被触发
+			console.log("beforeUpdated时属性值为"+this.a);   
+			//值为2，这个函数会在$watch函数之后被触发
 		},
 		updated: function (){
 			console.log("此时的a值为："+this.a);    //此时的值也为2，且在$watch函数之后触发
