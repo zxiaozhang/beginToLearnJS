@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>vue2</title>
+	<script type="text/javascript" src="https://unpkg.com/vue"></script>
+</head>
+<body>
+<div id="app1">{{a}}</div>
+
+<script type="text/javascript">
+	var app1 = new Vue({
+		el: "#app1",
+		data: {
+			a: 1
+		},
+		created : function (){   //这里的created（）钩子函数并不会触发$watch监听函数
+			this.a = 2333;
+		},
+		mounted : function (){  //同样的不会触发监听函数，毕竟监听是后绑定上去的。
+			this.a = 666;
+		},
+		beforeUpdate :　function(){
+			console.log("beforeUpdated时属性值为"+this.a);   //值为2，这个函数会在$watch函数之后被触发
+		},
+		updated: function (){
+			console.log("此时的a值为："+this.a);    //此时的值也为2，且在$watch函数之后触发
+		}
+
+	});
+	//内置的$watch方法，当监听的属性被改变时触发
+	app1.$watch('a',function (newValue,oldValue){
+		console.log('改变后的值为'+newValue);   //值为2
+		console.log('原始值为'+oldValue);    //原始值为666
+	});
+	app1.a =2;   //改变a属性值 来触发函数
+
+</script>
+</body>
+</html>
