@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>vue之computed属性以及watcher</title>
+	<script type="text/javascript" src="https://unpkg.com/vue"></script>
+	<script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+</head>
+<body>
+<div id="app1">
+	<p>{{ text }}</p>
+	<p>{{ TEXT }}</p>
+	<p>{{ TEXT2() }}</p>   <!--注意这里是函数哦 -->
+</div>
+<div id="app2">
+	{{ fullName }}
+</div>
+<div id="app3">
+	<p>问我一个yes/no 的问题</p>
+	<input type="text" name="question" v-model="question"/>
+	<p>{{ answer }}</p>
+</div>
+<script type="text/javascript">
+	var app1 = new Vue({
+		el: "#app1",
+		data: {
+			text: "hello xiaozhang!"
+		},
+		computed: {
+			TEXT: function (){
+				return this.text.toUpperCase();
+			}
+		},
+		methods: {
+			TEXT2: function(){
+				return this.text.toUpperCase();
+			}
+		}
+	});
+	//这里我们想转换字符的大小写，可以看到两种方法都可以实现，那么为什么开出一个computed来呢？这个计算函数相对于下边自定义的methods 来说优点是：结果缓存，也就是只要text属性值没有变化那么调用TEXT()函数就不需要再重新计算，而是直接返回缓存值，而自定义TEXT2（）则在任何情况下都会重新计算一遍。
+	//而且啊，你可以看到，放在computed中的函数，插入dom元素中时是可以作为一个变量来用的，不需要带函数的小括号，反之自定义的就不行了哦！
+
+	//computed 函数中set 与 get
+	var app2 = new Vue({
+		el: "#app2",
+		data:{
+			//fullName: ''  如果这里被打开，vue会报一个警告，提示fullName在data中已被定义，这个需要注意，如果这样定义说明想把fullName作为一个属性值，而非computed中的函数来定义了，然后只是后面的函数覆盖了这个值，才保证了结果的正确。所以这里不要有属性值设置。
+		},
+		computed: {
+			fullName:{
+				get: function (){
+					return this.firtName +' ' + this.lastName;
+				},
+				set: function(val){
+					var name = val.split(" ");
+					this.firtName = name[0];
+					this.lastName = name[name.length-1];
+				}
+			}
+		},
+		created: function (){
+			this.fullName = "xiao zhang";   //当这一句被执行时，computed中的ser()函数被调用,随后dom中需要fullName相当于调用了get方法
+		}
+	});
+	// app2.fullName = "xiao zhang"; 假如说不使用created钩子函数来改变fullName值，而是用这个语句其实就犯了和上边的一样的问题，也就是创建了一个新的属性值而非方法fullName的值。
+
+	//watcher 适用于当监测值发生变化是要异步请求结果 or 进行高性能效果事务等情况下
+	var app3 = new Vue({
+		el: "#app3",
+		data: {
+			question: "",
+			answer: "请先说出你的问题"
+		},
+		watch: {
+			question: function (newQuestion){
+				this.answer = "你继续说...",
+				this.getAnswer();
+			}
+		},
+		methods:{
+			getAnswer: _.debounce( //这里_debounce是一个延迟函数。
+				function () {
+					if(this.question.indexOf("?") === -1){
+						this.answer = "问完了就打个问号，谢谢！";
+						return
+					}
+					this.answer = "少年问的问题很有水平，待老夫思索一番...";
+					var vm = this;
+					axios.get('https://yesno.wtf/api')
+					.then(function(reponse){
+						vm.answer = _.capitalize(reponse.data.answer)
+					}).catch(function(error){
+						vm.answer = "少年问的问题老夫还tm不知道";
+					});
+				},500   //延迟时间500ms
+			)
+		}
+	});
+	//这里的watch 跟 vm.$watch差不多  都是自带的一些监听函数，要记住watch的使用场景，尽量不要滥用watch
+
+</script>
+</body>
+</html>
