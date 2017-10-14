@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>class和style</title>
+	<script type="text/javascript" src="https://unpkg.com/vue"></script>
+</head>
+<body>
+<div id="app1" class="model-div" v-bind:class="{active: isActive}">class的对象用法</div>
+<div id="app2" class="model-div" v-bind:class="{active: isActive,'model-nav': isNav}">对象用法之多值传递</div>
+<div id="app3" v-bind:class="classObj"> 非内联式用法</div>
+<div id="app4" v-bind:class="classObject">与computed方法结合使用</div>
+<div id="app5" v-bind:class="[activeClass,modalClass]">数组方式传递class</div>
+<script type="text/javascript">
+	//class之对象用法
+	var app1 = new Vue({
+		el: "#app1",
+		data:{
+			isActive :　true
+		}
+	});
+	//首先呢， v-bind:class是可以与普通的class属性并存的。其次，绑定指令中可以这样以对象的方式传递参数，只传递value也就是isActive值。当然也可以一次传递多值。
+
+	//app2 讲解多值传递 ：多属性值对象
+	var app2 = new Vue({
+		el: "#app2",
+		data: {
+			isActive: true,
+			isNav: true
+		}
+	});
+	//这里注意一点就是 如果calss是自定义的，而非内置的，那么在绑定的时候需要带上引号！！！
+
+  	//非内联式对象用法，直接传递整个data中的一个属性对象。写法同样注意： 自定义的calss名要带引号！
+  	var app3 = new Vue({
+  		el: "#app3",
+  		data: {
+  			classObj : {
+  				active: true,
+  				'modal-label': true
+  			}
+  		}
+  	});//注意自定义的class名哦
+
+  	//与computed属性结合使用
+  	var app4 = new Vue({
+  		el: "#app4",
+  		data: {
+  			isActive : true,
+  			modallabel: false
+  		},
+  		computed: {
+  			classObject: function(){
+  				return {
+  					active: this.isActive,
+  					'modal-label': !this.modallabel
+  				}
+  			}
+  		}
+  	});
+  	//注意class的命名方式， 同时注意computed的 get方法必须返回一个完整的对象
+
+  	var app5 = new Vue({
+  		el: "#app5",
+  		data:{
+  			activeClass: "active",
+  			modalClass: "modal-label"
+  		}
+  	});
+</script>
+<div id="app6" v-bind:class="[isActive? 'active' : '', modalClass]">数组嵌套表达式</div>
+<div id="app7" v-bind:class="[{active: isActive},modalClass]">数组嵌套对象用法</div>
+<script type="text/javascript">
+	var app6 = new Vue({
+		el: "#app6",
+		data:{
+			isActive: true,
+			modalClass: "modal-nav"
+		}
+	});
+	//数组中可以嵌套三元表达式一起使用，还可以嵌套对象如app7写法
+	var app7 = new Vue({
+		el: "#app7",
+		data:{
+			isActive: true,
+			modalClass: false
+		}
+	});
+</script>
+<div id="app8">
+	<my-component v-bind:class="{active: isActive}"></my-component>
+</div>
+<script type="text/javascript">
+	Vue.component('my-component',{
+		template: "<p class='foo bar'>hello xiaozhang!</p>"
+	});
+	var app8 = new Vue({
+		el: "#app8",
+		data: {
+			isActive: true
+		}
+	});
+	//在组件中使用class绑定，不会冲掉原来模板上的class名！且依旧可以使用上面说的对象以及数组方法
+</script>
+<div id="app9" v-bind:style="styleObj">样式的对象用法</div>
+<script type="text/javascript">
+	var app9 = new Vue({
+		el: "#app9",
+		data:{
+			styleObj: {
+				color: "red",
+				fontSize: "16px"   //驼峰法命令也可以哦！
+				//'font-size': "18px"  //这种的话就需要加引号了
+			}
+		}
+	});//建议直接传递一整个对象过去
+</script>
+<div id="app10" v-bind:style="[colorObj, borderObj]">style之数组用法</div>
+<script type="text/javascript">
+	var app10 = new Vue({
+		el: "#app10",
+		data:{
+			colorObj: {
+				color: "green"
+			},
+			borderObj:{
+				border: "1px",
+				borderStyle: "solid"
+			}
+		}
+	});
+	//注意数组用法传递的数组是一个对象数组
+</script>
+</body>
+</html>
