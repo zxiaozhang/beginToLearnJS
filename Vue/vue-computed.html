@@ -60,7 +60,7 @@
 			}
 		},
 		created: function (){
-			this.fullName = "xiao zhang";   //当这一句被执行时，computed中的set()函数被调用,随后dom中需要fullName相当于调用了get方法
+			this.fullName = "xiao zhang";   //当这一句被执行时，computed中的ser()函数被调用,随后dom中需要fullName相当于调用了get方法
 		}
 	});
 	// app2.fullName = "xiao zhang"; 假如说不使用created钩子函数来改变fullName值，而是用这个语句其实就犯了和上边的一样的问题，也就是创建了一个新的属性值而非方法fullName的值。
