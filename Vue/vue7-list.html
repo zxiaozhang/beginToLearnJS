@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>vue学习之条件语句</title>
+	<script type="text/javascript" src="https://unpkg.com/vue"></script>
+</head>
+<body>
+<div id="app1">
+	<ol>
+		<li v-for="(item,index) in news">{{item.title}}-{{index}}</li>
+	</ol>
+</div>
+<script type="text/javascript">
+	var app1 = new Vue({
+		el: "#app1",
+		data: {
+			news: [
+			{title: "一群人开会，一国人兴奋"},
+			{title: "一群人开会，一国家戒严"},
+			{title: "一群人开会，一城市瘫痪"}
+			]
+		}
+	});
+</script>
+<div id="app2">
+	<p v-for="(value, key) in nickNames">
+		<span>{{key}}--{{value}}</span>
+	</p>
+</div>
+<script type="text/javascript">
+	var app2 = new Vue({
+		el: "#app2",
+		data: {
+			nickNames:{
+				first:"zhen zhang",
+				second: "xiao zhang"
+			}
+		}
+	});
+	app2.$set(app2.nickNames, 'age', 24); 
+	Vue.set(app2.nickNames, 'class', '666');
+	//这两种方式可以给对象增加新的属性值，其他的不可以哦！
+	//增加多个属性使用assign（）方法
+	app2.nickNames = Object.assign({},app2.nickNames,{
+		color: "red",
+		style: "free"
+	});
+</script>
+<div id="app3">
+	<ul>
+		<template v-for="item in list" v-if="item.isShown">
+			<li> {{item.message}}</li>
+		</template>
+	</ul>
+</div>
+<script type="text/javascript">
+	var app3 = new Vue({
+		el: "#app3",
+		data: {
+			list:[
+			{isShown: true,message: "yes"},
+			{isShown: false, message: "nonono"},
+			{isShown: 1,message:"enenene"}]
+		}
+	});
+</script>
+<div id="app4">
+	<div>
+		<input type="text" v-model="newlist" v-on:keyup.enter="addNewList" placeholder="回车键结束">
+	</div>
+	<div>
+		<ol>
+			<todo-item v-for="(todo, index) in todolist" v-bind:key="todo.id" v-bind:title="todo.title" v-bind:todo="todo" v-on:remove="todolist.splice(index,1)"></todo-item>
+		</ol>
+	</div>
+</div>
+<script type="text/javascript">
+	Vue.component('todo-item',{
+		props:["todo"],
+		template: '<li>{{todo.title}}<button v-on:click="$emit(\'remove\')">X</button></li>'
+	});
+	var app4 = new Vue({
+		el: "#app4",
+		data:{
+			newlist: '',
+			todolist:[
+				{id:1,title:"写demo"},
+				{id:2,title:"审查"}
+			],
+			nextindex: 3
+		},
+		methods:{
+			addNewList: function(){
+				this.todolist.push({
+					id: this.nextindex++,
+					title: this.newlist
+				});
+				this.newlist="";
+			}
+		}
+	});
+	//简单的待办事项功能，这个组件啊，props的属性需要在dom上 v-bind 的一下 这个一定注意啊！
+</script>
+</body>
+</html>
