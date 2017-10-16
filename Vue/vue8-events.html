@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>vue学习之事件处理</title>
+	<script type="text/javascript" src="https://unpkg.com/vue"></script>
+</head>
+<body>
+<div id="app1">
+	<button v-on:click="count+=1">点我点我</button>
+	<p>上面的按钮被点击了{{count}}次</p>
+</div>
+<script type="text/javascript">
+	var app1 = new Vue({
+		el: "#app1",
+		data: {
+			count: 0
+		}
+	});
+</script>
+<div id="app2">
+	<button v-on:click="send('现在，按钮已经失效了',$event)">提交</button>
+</div>
+<script type="text/javascript">
+	var app2 = new Vue({
+		el: "#app2",
+		data:{
+
+		},
+		methods:{
+			send: function(message,event){
+				if (event){
+					event.preventDefault(); 
+				}
+				alert(message);
+			}
+		}
+	});
+	//获取dom上的时间使用$event 比如需要阻止冒泡时 就需要这类事件
+</script>
+<div id="app3">
+	<div v-on:click="parent" style="border: 1px solid #333243;padding: 6px;">父元素
+		<div v-on:click.stop="child">子元素按钮</div>
+	</div>
+</div>
+<script type="text/javascript">
+	var app3 = new Vue({
+		el: "#app3",
+		data: {
+
+		},
+		methods: {
+			parent: function(){
+				alert("点击了父元素");
+			},
+			child: function(){
+				alert("点击了子元素");
+			}
+		}
+	});
+	//事件修饰符 .stop 可以直接阻止事件的冒泡，上例子中可以很明白的看出来！ 点击子元素后 父元素事件不会再被触发。  
+	/*修饰符还有 
+	.stop      阻止事件的冒泡事件
+	.prevent   提交后不刷新当前界面
+	.self      仅绑定在该元素上！
+	.once      仅绑定一次事件，事件被触发一次后失效
+	*/
+</script>
+<div id="app4">
+	<input type="text" name="name" placeholder="按tab键结束" v-model="name" v-on:keyup.tab="log">
+</div>
+<script type="text/javascript">
+	var app4 = new Vue({
+		el: "#app4",
+		data: {
+			name: ""
+		},
+		methods: {
+			log: function(){
+				alert(this.name); 
+			}
+		}
+	});
+	/* 键盘的修饰符一共有以下几种：
+	.enter     回车
+	.tab       tab键
+	.delete    删除和退格键
+	.esc       返回键/退出键
+	.space     空格键
+	.up        上
+	.down      下
+	.left      左
+	.right     右
+
+	*/
+</script>
+</body>
+</html>
