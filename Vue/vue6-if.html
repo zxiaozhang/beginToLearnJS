@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>vue中的判断语句</title>
+	<script type="text/javascript" src="https://unpkg.com/vue"></script>
+</head>
+<body>
+<div id="app1">
+	<span v-if="isOK">yes</span>
+	<span v-else>NO</span>
+</div>
+<script type="text/javascript">
+	var app1 = new Vue({
+		el: "#app1",
+		data: {
+			isOK: 0
+		}
+	});
+	//if判断语句在dom中还可以使用else语句。且v-else必须跟在v-if 或者 v-else-if 后面，否则不会被识别
+</script>
+<div id="app2">
+	<template v-if="isOK">
+		<span>18+1大将于明日在京召开，全国各地民众激动的都要哭了</span>
+	</template>
+</div>
+<script type="text/javascript">
+	var app2 = new Vue({
+		el: "#app2",
+		data:{
+			isOK : true
+		}
+	});
+</script>
+<div id="app3">
+	<span v-if="city === 'bj'">bj：张灯结彩进不来</span>
+	<span v-else-if="city === 'qt'">else：一脸蒙圈无票权</span>
+	<span v-else>gw：热切旁观看不见</span>
+</div>
+<script type="text/javascript">
+	var app3 = new Vue({
+		el: "#app3",
+		data:{
+			city: "bj"
+		}
+	});
+</script>
+<div id="app4" style="border: 1px solid #ccc;padding: 5px;">
+	<template v-if="type === 'userName'">
+		<label>用户名登录：</label>
+		<input type="text" name="userName" placeholder="请输入用户名">
+	</template>
+	<template v-else-if="type === 'Email'">
+		<label>邮箱登录：</label>
+		<input type="text" name="email" placeholder="请输入邮箱地址">
+	</template>
+	<button v-on:click="changeType">切换登录方式</button>
+</div>
+<script type="text/javascript">
+	var app4 = new Vue({
+		el:"#app4",
+		data: {
+			type: "userName"
+		},
+		methods: {
+			changeType: function(){
+				this.type = this.type === 'userName' ? "Email" : "userName";
+			}
+		}
+	});
+</script>
+<div id="app5">
+	<span v-show="isShow">喜迎大会</span>
+</div>
+<script type="text/javascript">
+	var app5 = new Vue({
+		el: "#app5",
+		data: {
+			isShow: false
+		}
+	});
+	//这种v-show方式也可以控制dom的显示与隐藏，但是它是通过dom元素的display属性来控制的，无论如何dom都会被渲染。然后v-if 与v-show 要看情况选择使用，vshow有更高的初始渲染消耗， v-if有更高的切换渲染消耗。
+</script>
+</body>
+</html>
