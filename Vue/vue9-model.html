@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>vue学习之表单控件</title>
+	<script type="text/javascript" src="https://unpkg.com/vue"></script>
+</head>
+<body>
+<div id="app1">
+	<p style="white-space: pre-line;">{{text}}</p>
+	<textarea v-model="text" placeholder="你可以在这里输入一篇论文"></textarea>
+</div>
+<script type="text/javascript">
+	var app1 = new Vue({
+		el: "#app1",
+		data: {
+			text: ""
+		}
+	});
+</script>
+<div id="checkbox1">
+	<input type="checkbox" id="checkbox" v-model="isTrthy" v-on:click="alt">
+	<label for="checkbox">{{isTrthy}}</label>
+</div>
+<script type="text/javascript">
+	var app2 = new Vue({
+		el: "#checkbox1",
+		data:{ 
+			isTrthy: false
+		},
+		methods:{
+			alt: function(){
+				alert(this.isTrthy);
+			}
+		}
+	});
+	//这个获取的就是true 和 false 
+</script>
+<div id="app2" style="border: 1px solid red;padding: 5px;">
+	<input type="checkbox" id="java" name="java" value="java" v-model="checkedNames">
+	<label for="java">Java</label>
+	<input type="checkbox" name="javascript" id="javascript" value="javascript" v-model="checkedNames">
+	<label for="javascript">Javascript</label>
+	<input type="checkbox" name="python" id="python" value="python" v-model="checkedNames">
+	<label for="python">python</label>
+	<p>你选中的语言是: {{ checkedNames }}</p>
+</div>
+<script type="text/javascript">
+	var app2 = new Vue({
+		el: "#app2",
+		data:{
+			checkedNames: []
+		}
+	});
+	//dom中的value值会被传入数组中！！！所以这个value值是必须的！
+	//and 这里向数组push数据的顺序是按照你选择的顺序 而非dom排列的顺序！！！
+</script>
+<div id="app3" style="border: 1px solid green; padding: 5px;">
+	<select v-model="selected" multiple>
+		<option>HH</option>
+		<option>MM</option>
+		<option>qq</option>
+		<option>aa</option>
+	</select>
+	<p>选中了{{selected}}</p>
+</div>
+<script type="text/javascript">
+	var app3 = new Vue({
+		el:"#app3",
+		data:{
+			selected: []
+		}
+	});
+	//select列表无论是单选列表还是这种多选列表都是可以直接传入数组的。 多选列表多选要按住ctrl键哦
+</script>
+<div id="app4" style="border: 1px solid blue; padding: 5px;">
+	<select v-model="selectedName">
+		<option v-for="man in names" v-bind:value="man.value">{{man.message}}</option>
+	</select>
+	<p>选择的名称是： {{selectedName }}</p>
+</div>
+<script type="text/javascript">
+	var app4 = new Vue({
+		el: "#app4",
+		data: {
+			selectedName: "校长",
+			names:[
+				{value: "校长",message:"搞"},
+				{value: "主任",message: "谁道嘞"},
+				{value: "老司机",message: "可以的"},
+				{value: "教授",message: "你真坑"}
+			]
+		}
+	});
+	//看来最容易遗忘的就是属性的绑定，dom属性都要用v-bind 绑定啊
+</script>
+</body>
+</html>
