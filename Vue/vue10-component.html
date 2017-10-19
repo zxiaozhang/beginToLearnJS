@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>vue学习之组件</title>
+	<script type="text/javascript" src="https://unpkg.com/vue"></script>
+</head>
+<body>
+<div id="app1">
+	<one-component>
+		<p>这里有一个p标签</p>
+	</one-component>
+</div>
+<script type="text/javascript">
+	Vue.component('one-component',{
+		template: "<span>组件是一个span元素</span>"
+	});
+	var app1 = new Vue({
+		el: "#app1",
+		data: {
+
+		}
+	});
+	//这里例子可以看出，自定义组件是完全覆盖了dom元素本身内部有的一些东西。运行结果是只有span元素
+	//后面可以知道，子组件可以提供插口 <slot>来避免将父组件中的内容覆盖掉
+	//之前的例子都是这样声明了全局组件，任何地方都可以调用，局部组件的声明使用方法如下：
+</script>
+<div id="app2">
+	<second-component></second-component>
+</div>
+<script type="text/javascript">
+	var childComponent = {
+		template: '<p>这是app2的子组件</p>'
+	}
+	var app2 = new Vue({
+		el: "#app2",
+		data: {},
+		components: {
+			'second-component': childComponent
+		}
+	});
+</script>
+<div id="app3">
+	<t-com></t-com>
+	<t-com></t-com>
+	<t-com></t-com>
+	<p>点击数字可以不断增加</p>
+</div>
+<script type="text/javascript">
+	var data = {count : 0};
+	Vue.component('t-com',{
+		template: '<button v-on:click="count++">{{ count }}</button>',
+		data: function(){
+			return data
+		}
+	});
+	var app3 =new Vue({
+		el: "#app3"
+	});
+</script>
+<div id="app33">
+	<t-com></t-com>
+	<t-com></t-com>
+	<t-com></t-com>
+	<p>点击数字可以不断增加</p>
+</div>
+<script type="text/javascript">
+	Vue.component('t-com',{
+		template: '<button v-on:click="count++">{{ count }}</button>',
+		data: function(){
+			return {count : 0};
+		}
+	});
+	var app3 =new Vue({
+		el: "#app33"
+	});
+	//app3 和app33 非常的像，唯一不同的是，app33中返回的是一个新对象，而app3中返回的是同一个对象，在组件中，data会被传入作为Vue组件的构造函数，以此方式来实现传递给每一个vue实例，所以说，data必须是一个函数！而这个函数返回的内容决定了组件的一些功能！
+</script>
+<div id="app4">
+	<input type="text" name="name" v-model="message"  placeholder="输入你想说的话">
+	<four-com v-bind:message="message"></four-com><!--坑是在这个地方，要绑定数据！-->
+</div>
+<script type="text/javascript">
+	Vue.component('four-com',{
+		props: ["message"],
+		template: '<p>{{message}}</p>'
+	});
+	var app4 = new Vue({
+		el: "#app4",
+		data: {
+			message: '输入你想说的话'
+		}
+	});
+
+	//props可以从组件上层获取message信息，但是从目前验证来看，组件的上层就是dom元素中 <four-com>标签中的信息。v-bind:message="message" 和 props: ["message"] 都是必须的！还有一个方面就是说message这个属性值在整个app4中是都可以get到的！但是组件想获取，那么就得在调用组件时绑定一下！
+</script>
+<div id="app5">
+	<p>{{total}}</p>
+	<button-com v-on:childclick="incrementTotal"></button-com>
+	<button-com v-on:childclick="incrementTotal"></button-com>
+	<!--组件的监听事件，必须写在这个dom元素里，而不能写在下面的template中，否则监听的就不是组件事件了而是那个元素的事件！ -->
+</div>
+<script type="text/javascript">
+	Vue.component('button-com',{
+		template: '<button v-on:click="addCount">{{count}}</button>',
+		//这里的事件监听就是对这个button元素的监听了！
+		data: function(){
+			return {
+				count : 0
+			};
+		},
+		methods: {
+			addCount: function(){
+				this.count++;
+				this.$emit("childclick");
+				//这里也可以触发事件，简直666啊
+			}
+		}
+	});
+	var app5 = new Vue({
+		el: "#app5",
+		data: {
+			total: 0
+		},
+		methods: {
+			incrementTotal: function(){
+				this.total ++;
+			}
+		}
+	});
+</script>
+<div id="app6"><!--s数据流的双向传递demo-->
+	<input type="text" name="total" v-model="total">
+	<hh-com v-bind:total.sync="total"></hh-com>
+	<!-- 这里绑定props属性时要带上.sync标识-->
+</div>
+<script type="text/javascript">
+	Vue.component('hh-com',{
+		template: '<button v-on:click="addtotal">{{total}}</button>',
+		props: ["total"],
+		methods: {
+			addtotal: function(){
+				this.total++;
+				this.$emit('update:total',this.total);  
+				//触发事件时要出发这种update: props 格式的事件，且把变化的值传入进去
+			}
+		}
+	});
+	var app6 = new Vue({
+		el: "#app6",
+		data: {
+			total: "20"
+		}
+	});
+	//这么写之后浏览器控制台仍然会弹出warn 警告，不让更改父组件total的值 不知道怎么消去呢还
+</script>
+<div id="app7">
+	<!--组件内容分发 -->
+	<child-com></child-com>
+	<!-- <child-com v-show="isShown"></child-com> 写这个样子是不能获取的组件中的isShown值的！必须写到组件的template中-->
+</div>
+<script type="text/javascript">
+	Vue.component('child-com',{
+		template: '<div v-show="isShown">这是一个子组件</div>',
+		data: function(){
+			return {
+				isShown : true
+			};
+		}
+	});
+	var app7 = new Vue({
+		el: "#app7",
+		data: {}
+	});
+</script>
+<div id="slotTest" style="border: 1px solid red; padding: 5px;">
+	<!--使用slot分发内容 -->
+	<div>这里是父组件</div>
+	<app>
+		<p name="header">这是头部信息</p>
+		<p>这是没有name的信息</p>
+		<p name="foo">这里是底部信息</p>
+	</app>
+</div>
+<script type="text/javascript">
+	Vue.component('app',{
+		template: '<div>'+
+			'<p>这里是子组件</p>'+
+			'<slot name="header"></slot>'+
+			'<slot></slot>'+
+			'</div>'
+	});
+	var  app = new Vue({
+		el:"#slotTest",
+		data:{}
+	});
+	//这个结果可以看到以下几点哈：
+	/*如果有name值对应，那么元素会被插入对象的slot插口中！
+	如果没有对应的slot且存在一个无名的slot那么这些元素都会被插入该无名slot中！
+	*/
+</script>
+<div id="app8">
+	<!-- 作用域插槽-->
+	<text-com>
+		<template slot-scope="props">
+			<p>这里是父组件的区域</p>
+			<p>{{props.text}}</p>
+		</template>
+	</text-com>
+</div>
+<script type="text/javascript">
+	Vue.component('text-com',{
+		template: '<div><slot text="hello xiaozhang"></slot></div>'
+		//插槽不能单独成为一个template，外边必须有其他元素包裹
+	});
+	var app8 =new Vue({
+		el: "#app8",
+		data:{}
+	});
+	//已经是有点蒙圈了，这相当于是父元素查到了子组件中并且使用了子组件的属性。
+</script>
+</body>
+</html>
