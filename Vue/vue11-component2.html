@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>vue组件之再干一遍</title>
+	<script type="text/javascript" src="https://unpkg.com/vue"></script>
+</head>
+<body>
+<div id="app1">
+	<!-- 组件的套用-->
+	<other-component></other-component>
+</div>
+<script type="text/javascript">
+	Vue.component('my-component',{
+		template: '<p>这是我的组件</p>'
+	});
+	Vue.component('other-component',{
+		template: '<div>这里是另外的一个组件<my-component></my-component></div>'
+	});
+	var app1 = new Vue({
+		el: "#app1",
+		data:{}
+	});
+	//这里呢，展示的是一个模板嵌套的例子，other-component成为父组件。再次说明，正常开发中这种声明全局组件的方式很少用到，以后例子中也要注意使用局部组件。
+</script>
+<div id="props">
+	<!--props数据流传递 -->
+	<ul>
+		<li-com v-for="todo in shapes" v-bind:key="todo.id" v-bind:item="todo"></li-com>
+	</ul>
+	<!--v-for 后面都要跟一个v-bind:key   这个很重要！ -->
+</div>
+<script type="text/javascript">
+	var li = {
+		props:["item"],
+		template: "<li>{{item.shape}}<code>({{item.num}}条边)</code></li>"
+	};
+	// 局部变量的方式 这个props要写在这个定义里而不是下面的 components属性里面
+	var app2 = new Vue({
+		el:"#props",
+		data:{
+			shapes:[
+				{id: 1,shape: "正方形",num: 4},
+				{id: 2,shape: "三角形",num: 3},
+				{id: 3,shape: "圆形",num: "n"}
+			]
+		},
+		components:{
+			'li-com': li
+		}
+	});
+</script>
+</body>
+</html>
